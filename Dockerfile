@@ -1,8 +1,6 @@
-FROM microbox/chromium-builder:base
+FROM microbox/chromium-builder:source
 
-RUN mkdir /root/chromium
-WORKDIR /root/chromium
-RUN fetch --nohooks chromium
-
-WORKDIR /root/chromium/src
-RUN ./build/install-build-deps.sh --no-prompt
+RUN git pull --all
+RUN gclient sync --with_branch_heads --with_tags --nohooks --no-bootstrap --deps=unix
+RUN build/install-build-deps.sh --no-prompt
+RUN gclient runhooks
